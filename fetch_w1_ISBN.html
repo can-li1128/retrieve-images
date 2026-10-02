@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Syndetics Single Cover Fetcher</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+    .input-container {
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      padding: 8px;
+      font-size: 16px;
+      width: 250px;
+    }
+    button {
+      padding: 8px 15px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #coverDisplay {
+      margin-top: 20px;
+    }
+    #coverDisplay img {
+      max-width: 300px;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Fetch Book Cover from Syndetics</h2>
+
+  <div class="input-container">
+    <label for="isbnInput">Enter ISBN: </label>
+    <input type="text" id="isbnInput" placeholder="e.g., 9780387372358" />
+    <button onclick="fetchCover()">Get Cover</button>
+  </div>
+
+  <div id="coverDisplay"></div>
+
+  <script>
+    // Replace 'primo' with your library's Syndetics client code (e.g., 'bccls') if needed
+    const CLIENT_CODE = 'primo'; 
+
+    function fetchCover() {
+      const input = document.getElementById('isbnInput').value;
+      const displayContainer = document.getElementById('coverDisplay');
+      
+      // Remove spaces, hyphens, and non-ISBN characters
+      const cleanIsbn = input.trim().replace(/[^0-9X]/gi, '');
+
+      if (!cleanIsbn) {
+        displayContainer.innerHTML = '<p class="error">Please enter a valid ISBN.</p>';
+        return;
+      }
+
+      // Construct Syndetics Large Cover URL
+      const coverUrl = `https://www.syndetics.com/index.aspx?isbn=${cleanIsbn}/LC.GIF&client=${CLIENT_CODE}&type=xw12`;
+
+      // Render the image
+      displayContainer.innerHTML = `
+        <div>
+          <img src="${coverUrl}" alt="Cover for ISBN ${cleanIsbn}" />
+          <p><strong>ISBN:</strong> ${cleanIsbn}</p>
+        </div>
+      `;
+    }
+  </script>
+
+</body>
+</html>
